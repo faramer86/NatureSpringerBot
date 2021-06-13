@@ -13,7 +13,8 @@ from config import (
 from Vars import (
     JID,
     SPRINGER_URL,
-    DAILY_ARTICLES
+    DAILY_ARTICLES,
+    JCHANNEL
 )
 
 logging.basicConfig(
@@ -60,7 +61,6 @@ def make_message(article: dict, hashtags: str) -> str:
     link_web = article['url'][0]['value']
     return f'\n*{title}*\n\n{abstract}\n\n{hashtags}\n\n*Link:*\n{link_web}'
 
-
 def send_messages_job(context) -> None:
     """
     Action: send messages to specified channels (see JID) every N seconds (e.g. 3600; 1 hour)
@@ -73,7 +73,7 @@ def send_messages_job(context) -> None:
         DAILY_ARTICLES = list()
     current_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     for journal_name, journal_id in JID.items():
-        chat_id = f'@{journal_name}' if journal_name in ['NatureGenetics'] else f'@NatureReviewsJournal'
+        chat_id = JCHANNEL[journal_name]
         hashtags = f'#{journal_name} ' + date.today().strftime('#Nature%B%Y')
         response = get_current_articles(context,
                                         current_date=date.today().strftime('%Y-%m-%d'),
