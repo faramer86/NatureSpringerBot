@@ -1,5 +1,6 @@
 SPRINGER_URL = "http://api.springernature.com/meta/v2/json"
 BOTID = "@SpringerNatureBot"
+DAILY_ARTICLES = list()  # become empty every day at 2 PM (BST)
 JID = {"Nature": 41586,
        "NatureGenetics": 41588,
        "NatureReviewsCardiology": 41569,

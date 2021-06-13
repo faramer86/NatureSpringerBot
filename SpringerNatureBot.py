@@ -6,13 +6,14 @@ from datetime import date, datetime
 
 from config import (
     SPRINGER_API_KEY,
-    BOT_API_KEY,    
+    BOT_API_KEY,
     USER_CHAT_ID
 )
 
-from Vars import (,
+from Vars import (
     JID,
-    SPRINGER_URL
+    SPRINGER_URL,
+    DAILY_ARTICLES
 )
 
 logging.basicConfig(
@@ -24,7 +25,14 @@ logger = logging.getLogger(__name__)
 
 
 def get_current_articles(context, current_date, journal_id, journal_name) -> dict:
-    """TODO: description"""
+    """
+    Action: Send API request for Meta data to Springer Nature API Portal
+    :param context: special python-telegram-bot object
+    :param current_date: datetime object with current date
+    :param journal_id: journal id from Springer Nature database (from JID dict)
+    :param journal_name: journal name from JID dict
+    :return: json with list of articles from specified journal for specified time
+    """
     try:
         only_for_reviews = '' if journal_name in ['NatureGenetics'] else '"Review Article"'
         response = requests.get(SPRINGER_URL, params={'q': only_for_reviews +
@@ -41,7 +49,12 @@ def get_current_articles(context, current_date, journal_id, journal_name) -> dic
 
 
 def make_message(article: dict, hashtags: str) -> str:
-    """TODO: description"""
+    """
+    Action: make Telegram message from API response
+    :param article: dictionary from API response with individual article data
+    :param hashtags: list of hashtags, inserted at the end of the channel message
+    :return: string with assembled individual article info (title, abstract, hashtags, web link)
+    """
     title = article['title']
     abstract = article['abstract']
     link_web = article['url'][0]['value']
@@ -49,33 +62,46 @@ def make_message(article: dict, hashtags: str) -> str:
 
 
 def send_messages_job(context) -> None:
-    """TODO: description"""
+    """
+    Action: send messages to specified channels (see JID) every N seconds (e.g. 3600; 1 hour)
+    :param context: special python-telegram-bot object
+    :return: None
+    """
+    global DAILY_ARTICLES
+    if datetime.now().strftime("%H") == "02":
+        DAILY_ARTICLES = list()
     current_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     for journal_name, journal_id in JID.items():
+        chat_id = f'@{journal_name}' if journal_name in ['NatureGenetics'] else f'@NatureReviewsJournal'
         hashtags = f'#{journal_name} ' + date.today().strftime('#Nature%B%Y')
         response = get_current_articles(context,
-                                        current_date="2021-06-10",  # date.today().strftime('%Y-%m-%d'),  # "2021-04-12"
+                                        current_date=date.today().strftime('%Y-%m-%d'),
                                         journal_id=journal_id,
                                         journal_name=journal_name)
         if response:
             for article in response:
-                chat_id = f'@{journal_name}' if journal_name in ['NatureGenetics'] else f'@NatureReviewsJournal'
-                context.bot.send_message(chat_id=chat_id,
-                                         text=make_message(article, hashtags),
-                                         parse_mode=ParseMode.MARKDOWN)
-            context.bot.send_message(chat_id=USER_CHAT_ID,
-                                     text=f"Non-Empty Response for {journal_name}: {current_time}!")
+                doi = article['doi']
+                if doi not in DAILY_ARTICLES:
+                    DAILY_ARTICLES.append(doi)
+                    context.bot.send_message(chat_id=chat_id,
+                                             text=make_message(article, hashtags),
+                                             parse_mode=ParseMode.MARKDOWN)
+                else:
+                    continue
+                context.bot.send_message(chat_id=USER_CHAT_ID,
+                                         text=f"Non-Empty Response for {journal_name}: {current_time}!")
 
 
 def main() -> None:
-    """Run bot."""
+    """
+    Action: Run bot.
+    :return: None
+    """
     updater = Updater(token=BOT_API_KEY, use_context=True)
     job = updater.job_queue
 
-    daily_articles = list()  # TODO: clear article set at 00:00
-
     # Start the Bot
-    job.run_repeating(send_messages_job, interval=3600, first=3)
+    job.run_repeating(send_messages_job, interval=3600, first=5)
     updater.start_polling()
     updater.idle()
 
