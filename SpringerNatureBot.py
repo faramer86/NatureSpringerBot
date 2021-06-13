@@ -68,6 +68,7 @@ def send_messages_job(context) -> None:
     :return: None
     """
     global DAILY_ARTICLES
+    print(datetime.now().strftime("%H"))
     if datetime.now().strftime("%H") == "02":
         DAILY_ARTICLES = list()
     current_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
