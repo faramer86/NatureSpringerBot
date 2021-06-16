@@ -13,7 +13,6 @@ from config import (
 from Vars import (
     JID,
     SPRINGER_URL,
-    DAILY_ARTICLES,
     JCHANNEL
 )
 
@@ -81,14 +80,9 @@ def send_messages_job(context) -> None:
                                         journal_name=journal_name)
         if response:
             for article in response:
-                doi = article['doi']
-                if doi not in DAILY_ARTICLES:
-                    DAILY_ARTICLES.append(doi)
-                    context.bot.send_message(chat_id=chat_id,
-                                             text=make_message(article, hashtags),
-                                             parse_mode=ParseMode.MARKDOWN)
-                else:
-                    continue
+                context.bot.send_message(chat_id=chat_id,
+                                         text=make_message(article, hashtags),
+                                         parse_mode=ParseMode.MARKDOWN)
                 context.bot.send_message(chat_id=USER_CHAT_ID,
                                          text=f"Non-Empty Response for {journal_name}: {current_time}!")
 
