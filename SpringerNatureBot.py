@@ -2,7 +2,7 @@ import logging
 import requests
 from telegram import ParseMode
 from telegram.ext import Updater
-from datetime import date, datetime
+from datetime import date, timedelta, datetime
 
 from config import (
     SPRINGER_API_KEY,
@@ -61,21 +61,22 @@ def make_message(article: dict, hashtags: str) -> str:
     link_web = article['url'][0]['value']
     return f'\n*{title}*\n\n{abstract}\n\n{hashtags}\n\n*Link:*\n{link_web}'
 
+
 def send_messages_job(context) -> None:
     """
     Action: send messages to specified channels (see JID) every N seconds (e.g. 3600; 1 hour)
     :param context: special python-telegram-bot object
     :return: None
     """
-    global DAILY_ARTICLES
-    if datetime.now().strftime("%H") == "02":
-        DAILY_ARTICLES = list()
+
     current_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    desired_date = (datetime.today() - timedelta(days=2))
     for journal_name, journal_id in JID.items():
         chat_id = JCHANNEL[journal_name]
-        hashtags = f'#{journal_name} ' + date.today().strftime('#Nature%B%Y')
+        hashtags = f'#{journal_name} ' + desired_date.strftime('#Nature%B%Y')
         response = get_current_articles(context,
-                                        current_date=date.today().strftime('%Y-%m-%d'),
+                                        current_date=desired_date.strftime('%Y-%m-%d'),
+                                        # date.today().strftime('%Y-%m-%d'),
                                         journal_id=journal_id,
                                         journal_name=journal_name)
         if response:
@@ -101,7 +102,7 @@ def main() -> None:
     job = updater.job_queue
 
     # Start the Bot
-    job.run_repeating(send_messages_job, interval=3600, first=5)
+    job.run_repeating(send_messages_job, interval=timedelta(days=1), first=3)
     updater.start_polling()
     updater.idle()
 
