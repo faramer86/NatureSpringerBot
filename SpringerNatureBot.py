@@ -13,7 +13,8 @@ from config import (
 from Vars import (
     JID,
     SPRINGER_URL,
-    JCHANNEL
+    JCHANNEL,
+    HEADERS
 )
 
 logging.basicConfig(
@@ -34,11 +35,14 @@ def get_current_articles(context, current_date, journal_id, journal_name) -> dic
     :return: json with list of articles from specified journal for specified time
     """
     try:
-        only_for_reviews = '' if journal_name in ['NatureGenetics'] else '"Review Article"'
-        response = requests.get(SPRINGER_URL, params={'q': only_for_reviews +
-                                                           f'onlinedate:{current_date} ' +
-                                                           f'journalid:{journal_id}',
-                                                      'api_key': SPRINGER_API_KEY})
+        only_for_reviews = '' if journal_name in ['NatureGenetics',
+                                                  'NatureMachineIntelligence'] else '"Review Article" OR "Perspective"'
+        response = requests.get(SPRINGER_URL,
+                                params={'q': only_for_reviews +
+                                             f'onlinedate:{current_date} ' +
+                                             f'journalid:{journal_id}',
+                                        'api_key': SPRINGER_API_KEY},
+                                headers=HEADERS)
         return response.json()['records']
     except requests.exceptions.Timeout:
         context.bot.send_message(chat_id=USER_CHAT_ID, text="Request error: Timeout!")

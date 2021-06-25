@@ -1,6 +1,10 @@
 SPRINGER_URL = "http://api.springernature.com/meta/v2/json"
 BOTID = "@SpringerNatureBot"
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 OPR/40.0.2308.81'
+}
 JID = {"Nature": 41586,
+       "NatureMachineIntelligence": 42256,
        "NatureGenetics": 41588,
        "NatureReviewsCardiology": 41569,
        "NatureReviewsClinicalOncology": 41571,
@@ -22,8 +26,10 @@ JID = {"Nature": 41586,
        "NatureReviewsChemistry": 41570,
        "NatureReviewsEarthEnvironment": 43017,
        "NatureReviewsMaterials": 41578,
-       "NatureReviewsPhysics": 42254}
+       "NatureReviewsPhysics": 42254
+       }
 JCHANNEL = {"Nature": "@NatureReviewsLife",
+            "NatureMachineIntelligence": "@NatureMachineIntelligence",
             "NatureGenetics": "@NatureGenetics",
             "NatureReviewsCardiology": "@NatureReviewsClinical",
             "NatureReviewsClinicalOncology": "@NatureReviewsClinical",
@@ -45,4 +51,5 @@ JCHANNEL = {"Nature": "@NatureReviewsLife",
             "NatureReviewsChemistry": "@NatureReviewsPhysical",
             "NatureReviewsEarthEnvironment": "@NatureReviewsPhysical",
             "NatureReviewsMaterials": "@NatureReviewsPhysical",
-            "NatureReviewsPhysics": "@NatureReviewsPhysical"}
+            "NatureReviewsPhysics": "@NatureReviewsPhysical"
+            }
