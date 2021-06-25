@@ -4,8 +4,9 @@ This is Telegram bot that uses Springer Nature API to get up-to-date nature arti
 **NOTE:** we do not download pdf versions of articles, we simply send inform messages with title, abstract and web link to official web version of the article. Thus, we believe, we do not violate any laws. 
 
 Currently, aforementioned bot support four different telegram channels:
-1) [@NatureGenetics](https://t.me/NatureGenetics) - channel with up-to-date articles (all types) from Nature Genetics journal
-2) [@NatureReviewsLife](https://t.me/NatureReviewsLife) - channel that covers only review articles from 
+1) [@NatureGenetics](https://t.me/NatureGenetics) - channel with the latest articles (all types) from Nature Genetics journal
+2) [@NatureMachineIntelligence](https://t.me/NatureMachineIntelligence) - channel with the latest articles (all types) from Nature Machine Intelligence journal
+3) [@NatureReviewsLife](https://t.me/NatureReviewsLife) - channel that covers only review and perspective articles from 
    "Life Sciences" section of [Nature Reviews Journal portfolio](https://www.springernature.com/gp/librarians/products/journals/nature-research-journals/nature-reviews) + Nature itself:
     * Nature 
     * Nature Reviews Cancer 
@@ -15,7 +16,7 @@ Currently, aforementioned bot support four different telegram channels:
     * Nature Reviews Microbiology
     * Nature Reviews Molecular Cell Biology 
     * Nature Reviews Neurosciences
-3) [@NatureReviewsClinical](https://t.me/NatureReviewsClinical) - channel that covers only review articles from "Clinical Sciences" section:
+4) [@NatureReviewsClinical](https://t.me/NatureReviewsClinical) - channel that covers only review and perspective articles from "Clinical Sciences" section:
     * Nature Reviews Cardiology
     * Nature Reviews Clinical Oncology 
     * Nature Reviews Disease Primers
@@ -25,7 +26,7 @@ Currently, aforementioned bot support four different telegram channels:
     * Nature Reviews Neurology
     * Nature Reviews Rheumatology
     * Nature Reviews Urology
-4) [@NatureReviewsPhysical](https://t.me/NatureReviewsPhysical) - channel that covers only review articles from "Physical Sciences" section:
+5) [@NatureReviewsPhysical](https://t.me/NatureReviewsPhysical) - channel that covers only review and perspective articles from "Physical Sciences" section:
     * Nature Reviews Chemistry
     * Nature Reviews Earth & Environment 
     * Nature Reviews Materials
